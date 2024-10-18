@@ -9,7 +9,7 @@ function ManageAppointments() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const userRole = localStorage.getItem('role');
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+ 
   useEffect(() => {
     if (userRole !== 'doctor' && userRole !== 'super_admin') {
       navigate('/');
@@ -20,8 +20,8 @@ function ManageAppointments() {
       const token = localStorage.getItem('token');
       try {
         const endpoint = userRole === 'super_admin'
-          ? `${baseUrl}/api/appointments/all`
-          : `${baseUrl}/api/appointments/doctor`;
+          ? 'http://localhost:4000/api/appointments/all'
+          : 'http://localhost:4000/api/appointments/doctor';
 
         const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` }

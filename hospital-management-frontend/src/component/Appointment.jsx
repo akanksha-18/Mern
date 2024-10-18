@@ -10,11 +10,11 @@ function Appointment() {
   const [symptoms, setSymptoms] = useState(''); 
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+  
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get(`${baseUrl}/api/users?role=doctor`);
+        const res = await axios.get('http://localhost:4000/api/users?role=doctor');
         if (res.data.length === 0) {
           setError('No doctors found');
         } else {
@@ -46,7 +46,7 @@ function Appointment() {
 
     try {
       const utcDate = new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000);
-      await axios.post(`${baseUrl}/api/appointments/book`, {
+      await axios.post('http://localhost:4000/api/appointments/book', {
         doctorId: doctorId,
         slot: utcDate.toISOString(),
         symptoms: symptoms 

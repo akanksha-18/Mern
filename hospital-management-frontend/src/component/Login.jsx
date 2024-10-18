@@ -9,7 +9,7 @@ function Login({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -25,7 +25,7 @@ function Login({ setIsLoggedIn }) {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${baseUrl}/api/users/login`, { email, password });
+      const res = await axios.post('http://localhost:4000/api/users/login', { email, password });
 
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));

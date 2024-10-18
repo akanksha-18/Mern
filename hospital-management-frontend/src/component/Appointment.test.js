@@ -10,6 +10,7 @@ jest.mock('axios');
 describe('Appointment Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.clear(); // Clear local storage before each test
   });
 
   test('renders the appointment form', async () => {
@@ -58,10 +59,12 @@ describe('Appointment Component', () => {
 
     fireEvent.change(screen.getByLabelText(/select doctor/i), { target: { value: '1' } });
     fireEvent.change(screen.getByLabelText(/describe your symptoms/i), { target: { value: 'Fever' } });
-    
-    // Mocking date selection
-    const date = new Date();
-    fireEvent.change(screen.getByLabelText(/select date and time/i), { target: { value: date.toString() } });
+
+    // Directly call the DatePicker's onChange
+    const date = new Date(); 
+    await act(async () => {
+      screen.getByLabelText(/select date and time/i).onChange(date);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /book appointment/i }));
 
@@ -83,10 +86,12 @@ describe('Appointment Component', () => {
 
     fireEvent.change(screen.getByLabelText(/select doctor/i), { target: { value: '1' } });
     fireEvent.change(screen.getByLabelText(/describe your symptoms/i), { target: { value: 'Fever' } });
-    
-    // Mocking date selection
-    const date = new Date();
-    fireEvent.change(screen.getByLabelText(/select date and time/i), { target: { value: date.toString() } });
+
+    // Directly call the DatePicker's onChange
+    const date = new Date(); 
+    await act(async () => {
+      screen.getByLabelText(/select date and time/i).onChange(date);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /book appointment/i }));
 
@@ -108,10 +113,12 @@ describe('Appointment Component', () => {
 
     fireEvent.change(screen.getByLabelText(/select doctor/i), { target: { value: '1' } });
     fireEvent.change(screen.getByLabelText(/describe your symptoms/i), { target: { value: 'Fever' } });
-    
-    // Mocking date selection
-    const date = new Date();
-    fireEvent.change(screen.getByLabelText(/select date and time/i), { target: { value: date.toString() } });
+
+    // Directly call the DatePicker's onChange
+    const date = new Date(); 
+    await act(async () => {
+      screen.getByLabelText(/select date and time/i).onChange(date);
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /book appointment/i }));
 

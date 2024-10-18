@@ -8,6 +8,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { toast } from 'react-toastify';
 
+
 const mock = new MockAdapter(axios);
 
 // Mock the useNavigate hook
