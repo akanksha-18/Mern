@@ -4,11 +4,12 @@ import axios from 'axios';
 function PatientAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [error, setError] = useState('');
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   useEffect(() => {
     const fetchAppointments = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get('http://localhost:4000/api/appointments/patient', {
+            const res = await axios.get(`${baseUrl}/api/appointments/patient`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log(res.data); 

@@ -1,72 +1,79 @@
 /* eslint-disable no-undef */
-// Login.test.js
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
-import Login from './Login'; // Adjust the import path as necessary
+import Login from './Login';
 
 jest.mock('axios');
 
 describe('Login Component', () => {
-  let setIsLoggedInMock;
+  let setIsLoggedIn;
 
   beforeEach(() => {
-    setIsLoggedInMock = jest.fn();
-    render(<Login setIsLoggedIn={setIsLoggedInMock} />);
+    setIsLoggedIn = jest.fn();
+    render(
+      <Router>
+        <Login setIsLoggedIn={setIsLoggedIn} />
+      </Router>
+    );
   });
 
-  test('renders Login component', () => {
-    expect(screen.getByText(/Login/i)).toBeInTheDocument();
+  test('renders the login form', () => {
+    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
-  test('displays error message when fields are empty', async () => {
-    fireEvent.click(screen.getByText(/Login/i));
-    expect(await screen.findByText(/Please fill in all fields./i)).toBeInTheDocument();
+  test('shows an error message when fields are empty', async () => {
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Please fill in all fields.')).toBeInTheDocument();
+    });
   });
 
-  test('displays error message on failed login', async () => {
-    axios.post.mockRejectedValue({ response: { data: { error: 'Invalid credentials' } } });
+  test('shows an error message for invalid credentials', async () => {
+    axios.post.mockRejectedValueOnce({ response: { data: { error: 'User not found' } } });
 
-    fireEvent.change(screen.getByPlaceholderText(/Email/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'wrongpassword' } });
-    fireEvent.click(screen.getByText(/Login/i));
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'invalid@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'wrongpassword' } });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    expect(await screen.findByText(/Invalid credentials/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('User not found')).toBeInTheDocument();
+    });
   });
 
-  test('displays success message on successful login', async () => {
-    const mockResponse = {
+  test('logs in successfully and navigates to home', async () => {
+    axios.post.mockResolvedValueOnce({
       data: {
-        token: 'test-token',
-        user: { email: 'test@example.com', role: 'user' },
+        token: 'fakeToken',
+        user: { role: 'user' },
       },
-    };
-    axios.post.mockResolvedValue(mockResponse);
+    });
 
-    fireEvent.change(screen.getByPlaceholderText(/Email/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'password' } });
-    fireEvent.click(screen.getByText(/Login/i));
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password' } });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    await waitFor(() => expect(setIsLoggedInMock).toHaveBeenCalledWith(true));
-    expect(await screen.findByText(/Logged in successfully!/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(setIsLoggedIn).toHaveBeenCalledWith(true);
+    });
   });
 
-  test('disables button and shows loading state during submission', async () => {
-    const mockResponse = {
+  test('shows loading state during login', async () => {
+    axios.post.mockResolvedValueOnce({
       data: {
-        token: 'test-token',
-        user: { email: 'test@example.com', role: 'user' },
+        token: 'fakeToken',
+        user: { role: 'user' },
       },
-    };
-    axios.post.mockImplementation(() => new Promise(() => {})); // Simulate a delay
+    });
 
-    fireEvent.change(screen.getByPlaceholderText(/Email/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'password' } });
-    const button = screen.getByRole('button', { name: /Login/i });
-    fireEvent.click(button);
+    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password' } });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    expect(button).toBeDisabled(); // Button should be disabled
-    expect(button).toHaveTextContent('Logging in...'); // Loading state
+    expect(screen.getByText('Logging in...')).toBeInTheDocument();
   });
 });

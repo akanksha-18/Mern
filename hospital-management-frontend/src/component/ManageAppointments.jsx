@@ -9,7 +9,7 @@ function ManageAppointments() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const userRole = localStorage.getItem('role');
-
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   useEffect(() => {
     if (userRole !== 'doctor' && userRole !== 'super_admin') {
       navigate('/');
@@ -20,8 +20,8 @@ function ManageAppointments() {
       const token = localStorage.getItem('token');
       try {
         const endpoint = userRole === 'super_admin'
-          ? 'http://localhost:4000/api/appointments/all'
-          : 'http://localhost:4000/api/appointments/doctor';
+          ? `${baseUrl}/api/appointments/all`
+          : `${baseUrl}/api/appointments/doctor`;
 
         const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` }
@@ -45,7 +45,7 @@ function ManageAppointments() {
   const handleStatusChange = async (id, status) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(`http://localhost:4000/api/appointments/${id}`, { status }, {
+      await axios.patch(`${baseUrl}/api/appointments/${id}`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAppointments(appointments.map(app => 

@@ -9,7 +9,7 @@ function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in)$/;
     return re.test(String(email).toLowerCase());
@@ -41,7 +41,7 @@ function Register() {
     }
 
     try {
-       await axios.post('http://localhost:4000/api/users/register', 
+       await axios.post(`${baseUrl}/api/users/register`, 
         { 
         name, 
         email, 

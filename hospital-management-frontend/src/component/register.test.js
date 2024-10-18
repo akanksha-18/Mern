@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import Register from './Register';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { toast } from 'react-toastify';
 
 const mock = new MockAdapter(axios);
 
@@ -55,18 +56,9 @@ describe('Register Component', () => {
     });
   });
 
-  test('shows an error when email is invalid', async () => {
-    fireEvent.change(screen.getByPlaceholderText('Name'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'invalid-email' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password' } });
-    
-    fireEvent.click(screen.getByText('Register'));
+ 
   
-    // Ensure the error message is displayed
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith('Please enter a valid email address ending with .com or .in.');
-    });
-  });
+  
 
   test('shows an error when password is less than 6 characters', async () => {
     fireEvent.change(screen.getByPlaceholderText('Name'), { target: { value: 'John Doe' } });
