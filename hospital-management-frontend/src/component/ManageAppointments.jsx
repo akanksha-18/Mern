@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -45,7 +45,7 @@ function ManageAppointments() {
   const handleStatusChange = async (id, status) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(`${baseUrl}/api/appointments/${id}`, { status }, {
+      await axios.patch(`http://localhost:4000/api/appointments/${id}`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAppointments(appointments.map(app => 

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
+
 const AdminDashboard = () => {
     const [doctors, setDoctors] = useState([]); 
     const [patients, setPatients] = useState([]);
@@ -11,20 +12,13 @@ const AdminDashboard = () => {
     const [patientName, setPatientName] = useState('');
     const [patientEmail, setPatientEmail] = useState('');
     const [patientPassword, setPatientPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
     const navigate = useNavigate();
   
     useEffect(() => {
-        // const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role'); 
-
-      
-        if (role !== 'super_admin') {
-            alert('Access denied. Only super admins can access this page.');
-            navigate('/'); 
-        } else {
-            fetchData();
-        }
-    }, [navigate]);
+        fetchData();
+    }, []);
 
     const fetchData = async () => {
         const token = localStorage.getItem('token');
@@ -39,12 +33,9 @@ const AdminDashboard = () => {
             });
             setPatients(patientResponse.data);
         } catch (err) {
-            alert('Error fetching data: ' + (err.response?.data?.error || err.message));
+            setErrorMessage('Error fetching data: ' + (err.response?.data?.error || err.message));
         }
     };
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,11 +45,11 @@ const AdminDashboard = () => {
     const addDoctor = async () => {
         const token = localStorage.getItem('token');
         if (!doctorName || !doctorEmail || !doctorPassword || !doctorSpecialization) {
-            alert('Please fill in all fields.');
+            setErrorMessage('Please fill in all fields.');
             return;
         }
         if (!validateEmail(doctorEmail)) {
-            alert('Please enter a valid email address.');
+            setErrorMessage('Please enter a valid email address.');
             return;
         }
 
@@ -78,18 +69,18 @@ const AdminDashboard = () => {
             setDoctorEmail('');
             setDoctorPassword('');
         } catch (err) {
-            alert('Error adding doctor: ' + (err.response?.data?.error || err.message));
+            setErrorMessage('Error adding doctor: ' + (err.response?.data?.error || err.message));
         }
     };
 
     const addPatient = async () => {
         const token = localStorage.getItem('token');
         if (!patientName || !patientEmail || !patientPassword) {
-            alert('Please fill in all fields.');
+            setErrorMessage('Please fill in all fields.');
             return;
         }
         if (!validateEmail(patientEmail)) {
-            alert('Please enter a valid email address.');
+            setErrorMessage('Please enter a valid email address.');
             return;
         }
 
@@ -107,7 +98,7 @@ const AdminDashboard = () => {
             setPatientEmail('');
             setPatientPassword('');
         } catch (err) {
-            alert('Error adding patient: ' + (err.response?.data?.error || err.message));
+            setErrorMessage('Error adding patient: ' + (err.response?.data?.error || err.message));
         }
     };
 
@@ -119,7 +110,7 @@ const AdminDashboard = () => {
             });
             setDoctors(doctors.filter(doctor => doctor._id !== id));
         } catch (err) {
-            alert('Error deleting doctor: ' + (err.response?.data?.error || err.message));
+            setErrorMessage('Error deleting doctor: ' + (err.response?.data?.error || err.message));
         }
     };
 
@@ -131,13 +122,15 @@ const AdminDashboard = () => {
             });
             setPatients(patients.filter(patient => patient._id !== id));
         } catch (err) {
-            alert('Error deleting patient: ' + (err.response?.data?.error || err.message));
+            setErrorMessage('Error deleting patient: ' + (err.response?.data?.error || err.message));
         }
     };
 
     return (
         <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
             <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+
+            {errorMessage && <div className="text-red-500">{errorMessage}</div>}
 
             <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Add Doctor</h2>
@@ -158,14 +151,14 @@ const AdminDashboard = () => {
                     />
                     <input 
                         type="email" 
-                        placeholder="Email" 
+                        placeholder="Doctor's Email"  // Updated placeholder
                         value={doctorEmail} 
                         onChange={e => setDoctorEmail(e.target.value)} 
                         className="border rounded p-2"
                     />
                     <input 
                         type="password" 
-                        placeholder="Password" 
+                        placeholder="Doctor's Password"  // Updated placeholder
                         value={doctorPassword} 
                         onChange={e => setDoctorPassword(e.target.value)} 
                         className="border rounded p-2"
@@ -203,14 +196,14 @@ const AdminDashboard = () => {
                     />
                     <input 
                         type="email" 
-                        placeholder="Email" 
+                        placeholder="Patient's Email"  // Updated placeholder
                         value={patientEmail} 
                         onChange={e => setPatientEmail(e.target.value)} 
                         className="border rounded p-2"
                     />
                     <input 
                         type="password" 
-                        placeholder="Password" 
+                        placeholder="Patient's Password"  // Updated placeholder
                         value={patientPassword} 
                         onChange={e => setPatientPassword(e.target.value)} 
                         className="border rounded p-2"
