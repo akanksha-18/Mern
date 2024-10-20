@@ -125,6 +125,38 @@ superAdminRoutes.delete('/patients/:id', authenticate, superAdminAuth, async (re
         res.status(500).json({ message: 'Server error' });
     }
 });
+// Route to update a doctor
+superAdminRoutes.put('/doctors/:id', authenticate, superAdminAuth, async (req, res) => {
+    try {
+        const { name, specialization, email, password } = req.body; 
+        const updatedData = {};
+
+        // Only add fields that are provided in the request body
+        if (name) updatedData.name = name;
+        if (specialization) updatedData.specialization = specialization;
+        if (email) updatedData.email = email;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updatedData.password = hashedPassword;
+        }
+
+        // Find the doctor by ID and update the provided fields
+        const updatedDoctor = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        res.json({ message: 'Doctor updated successfully.', doctor: updatedDoctor });
+    } catch (error) {
+        console.error(error);
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Doctor with this email already exists.' });
+        }
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 module.exports = {
     superAdminRoutes
