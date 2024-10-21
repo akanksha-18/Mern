@@ -10,6 +10,7 @@ function ManageAppointments() {
   const navigate = useNavigate();
   const userRole = localStorage.getItem('role');
   const baseURL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     if (userRole !== 'doctor' && userRole !== 'super_admin') {
       navigate('/');
@@ -92,34 +93,34 @@ function ManageAppointments() {
   };
 
   return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4">Manage Appointments</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="container mx-auto mt-8 px-4">
+      <h2 className="text-2xl font-bold mb-4 text-center lg:text-left">Manage Appointments</h2>
+      {error && <p className="text-red-500 mb-4 text-center lg:text-left">{error}</p>}
       {appointments.length > 0 ? (
         <ul className="space-y-4">
           {appointments.map((appointment) => (
-            <li key={appointment._id} className="bg-white shadow-md rounded-lg p-4">
-              <p>
+            <li key={appointment._id} className="bg-white shadow-md rounded-lg p-4 transition-all hover:shadow-lg">
+              <p className="text-center lg:text-left">
                 <strong>Patient:</strong> {appointment.patient ? appointment.patient.name : 'Unknown'}
               </p>
-              <p>
+              <p className="text-center lg:text-left">
                 <strong>Doctor:</strong> {userRole === 'doctor' ? 'You' : (appointment.doctor ? appointment.doctor.name : 'Unknown')}
               </p>
-              <p><strong>Slot:</strong> {formatDate(appointment.date)}</p>
-              <p><strong>Status:</strong> {appointment.status}</p>
-              <p><strong>Symptoms:</strong> {appointment.symptoms || 'No symptoms provided'}</p>
+              <p className="text-center lg:text-left"><strong>Slot:</strong> {formatDate(appointment.date)}</p>
+              <p className="text-center lg:text-left"><strong>Status:</strong> {appointment.status}</p>
+              <p className="text-center lg:text-left"><strong>Symptoms:</strong> {appointment.symptoms || 'No symptoms provided'}</p>
               
               {appointment.status === 'pending' && !isDateExpired(appointment.date) && userRole !== 'super_admin' && (
-                <div className="mt-2">
+                <div className="mt-2 flex justify-center lg:justify-start">
                   <button 
                     onClick={() => handleStatusChange(appointment._id, 'accepted')}
-                    className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                    className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600"
                   >
                     Accept
                   </button>
                   <button 
                     onClick={() => handleStatusChange(appointment._id, 'rejected')}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                   >
                     Reject
                   </button>
@@ -127,22 +128,24 @@ function ManageAppointments() {
               )}
 
               {isDateExpired(appointment.date) && (
-                <p className="text-gray-500 mt-2">This appointment has expired.</p>
+                <p className="text-gray-500 mt-2 text-center lg:text-left">This appointment has expired.</p>
               )}
 
               {userRole === 'super_admin' && (
-                <button 
-                  onClick={() => handleDeleteAppointment(appointment._id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded mt-2"
-                >
-                  Delete Appointment
-                </button>
+                <div className="mt-2 flex justify-center lg:justify-start">
+                  <button 
+                    onClick={() => handleDeleteAppointment(appointment._id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded mt-2 hover:bg-red-600"
+                  >
+                    Delete Appointment
+                  </button>
+                </div>
               )}
             </li>
           ))}
         </ul>
       ) : (
-        !error && <p>No appointments found.</p>
+        !error && <p className="text-center">No appointments found.</p>
       )}
       <ToastContainer />
     </div>
