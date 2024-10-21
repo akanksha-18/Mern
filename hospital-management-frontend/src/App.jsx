@@ -4,7 +4,6 @@ import Appointment from "./component/Appointment";
 import Login from "./component/Login";
 import Register from "./component/Register";
 import ManageAppointments from "./component/ManageAppointments";
-import ProtectedRoute from "./component/ProtectedRoute";
 import PatientAppointments from "./component/PatientAppointment";
 import Navbar from "./component/Navbar";
 import AdminDashboard from "./component/AdminDashboard";

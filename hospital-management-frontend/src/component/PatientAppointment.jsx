@@ -4,12 +4,12 @@ import axios from 'axios';
 function PatientAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [error, setError] = useState('');
- 
+  const baseURL = import.meta.env.VITE_BASE_URL;
   useEffect(() => {
     const fetchAppointments = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get('http://localhost:4000/api/appointments/patient', {
+            const res = await axios.get(`${baseURL}/api/appointments/patient`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log(res.data); 
@@ -69,7 +69,7 @@ function PatientAppointments() {
                   {' '}{appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                 </span>
               </p>
-              <p><strong>Symptoms:</strong> {appointment.symptoms || 'N/A'}</p> {/* Display symptoms */}
+              <p><strong>Symptoms:</strong> {appointment.symptoms || 'N/A'}</p> 
             </li>
           ))}
         </ul>
