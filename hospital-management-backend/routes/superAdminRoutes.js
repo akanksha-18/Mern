@@ -70,7 +70,7 @@ superAdminRoutes.get('/doctors', authenticate, superAdminAuth, async (req, res) 
     }
 });
 
-// Route to list all patients
+
 superAdminRoutes.get('/patients', authenticate, superAdminAuth, async (req, res) => {
     try {
         const patients = await User.find({ role: 'patient' });
@@ -85,12 +85,11 @@ superAdminRoutes.post('/patients', authenticate, superAdminAuth, async (req, res
     try {
         const { name, email, password } = req.body; 
 
-        // Validate input
+      
         if (!name || !email || !password) {
             return res.status(400).json({ error: 'Name, email, and password are required.' });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newPatient = new User({
@@ -112,7 +111,7 @@ superAdminRoutes.post('/patients', authenticate, superAdminAuth, async (req, res
 });
 
 
-// Route to delete a patient
+
 superAdminRoutes.delete('/patients/:id', authenticate, superAdminAuth, async (req, res) => {
     try {
         const patient = await User.findByIdAndDelete(req.params.id);
@@ -125,13 +124,13 @@ superAdminRoutes.delete('/patients/:id', authenticate, superAdminAuth, async (re
         res.status(500).json({ message: 'Server error' });
     }
 });
-// Route to update a doctor
+
 superAdminRoutes.put('/doctors/:id', authenticate, superAdminAuth, async (req, res) => {
     try {
         const { name, specialization, email, password } = req.body; 
         const updatedData = {};
 
-        // Only add fields that are provided in the request body
+       
         if (name) updatedData.name = name;
         if (specialization) updatedData.specialization = specialization;
         if (email) updatedData.email = email;
@@ -140,7 +139,7 @@ superAdminRoutes.put('/doctors/:id', authenticate, superAdminAuth, async (req, r
             updatedData.password = hashedPassword;
         }
 
-        // Find the doctor by ID and update the provided fields
+        
         const updatedDoctor = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
 
         if (!updatedDoctor) {

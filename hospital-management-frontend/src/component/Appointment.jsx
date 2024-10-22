@@ -32,43 +32,43 @@ function Appointment() {
 
   const bookAppointment = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem('token');
 
     if (!token) {
-      setError('You need to log in to book an appointment.');
-      return;
+        setError('You need to log in to book an appointment.');
+        return;
     }
 
-    if (!doctorId || !selectedDate || !symptoms) { 
-      setError('Please select a doctor, a valid date/time, and enter your symptoms before booking.');
-      return;
+    if (!doctorId || !selectedDate || !symptoms) {
+        setError('Please select a doctor, a valid date/time, and enter your symptoms before booking.');
+        return;
     }
 
     try {
-      const utcDate = new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000);
-      await axios.post(`${baseURL}/api/appointments/book`, {
-        doctorId: doctorId,
-        slot: utcDate.toISOString(),
-        symptoms: symptoms 
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+        const utcDate = new Date(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000);
+        await axios.post(`${baseURL}/api/appointments/book`, {
+            doctorId: doctorId,
+            slot: utcDate.toISOString(),
+            symptoms: symptoms
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
-      setMessage('Appointment booked successfully!');
-      setError('');
-      setDoctorId('');
-      setSelectedDate(null);
-      setSymptoms('');
+        setMessage('Appointment booked successfully!');
+        setError('');
+        setDoctorId('');
+        setSelectedDate(null);
+        setSymptoms('');
     } catch (err) {
-      console.error('Error booking appointment:', err);
-      setError(err.response?.data?.message || 'An unexpected error occurred while booking the appointment.');
-      setMessage('');
+        console.error('Error booking appointment:', err);
+        setError(err.response?.data?.message || 'An unexpected error occurred while booking the appointment.');
+        setMessage('');
     }
-  };
+};
+
   const filterTime = (time) => {
     const hour = time.getHours();
     return hour >= 9 && hour <= 17; 
