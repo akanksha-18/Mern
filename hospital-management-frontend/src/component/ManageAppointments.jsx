@@ -131,7 +131,7 @@ function ManageAppointments() {
                 <p className="text-gray-500 mt-2 text-center lg:text-left">This appointment has expired.</p>
               )}
 
-              {userRole === 'super_admin' && (
+              {/* {userRole === 'super_admin' && (
                 <div className="mt-2 flex justify-center lg:justify-start">
                   <button 
                     onClick={() => handleDeleteAppointment(appointment._id)}
@@ -140,7 +140,23 @@ function ManageAppointments() {
                     Delete Appointment
                   </button>
                 </div>
-              )}
+              )} */}
+              {userRole === 'super_admin' && (
+  <div className="mt-2 flex justify-center lg:justify-start">
+    <button 
+      onClick={() => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this appointment?');
+        if (confirmDelete) {
+          handleDeleteAppointment(appointment._id);
+        }
+      }}
+      className="bg-red-500 text-white px-4 py-2 rounded mt-2 hover:bg-red-600"
+    >
+      Delete Appointment
+    </button>
+  </div>
+)}
+
             </li>
           ))}
         </ul>
