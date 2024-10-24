@@ -305,7 +305,7 @@ const AdminDashboard = () => {
     const [editingPatientId, setEditingPatientId] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
-    // const baseURL = import.meta.env.VITE_BASE_URL;
+    const baseURL = import.meta.env.VITE_BASE_URL;
 
     useEffect(() => {
         fetchData();
@@ -314,12 +314,12 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         const token = localStorage.getItem('token');
         try {
-            const doctorResponse = await axios.get('http://localhost:4000/api/superadmin/doctors', {
+            const doctorResponse = await axios.get(`${baseURL}/api/superadmin/doctors`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setDoctors(doctorResponse.data);
 
-            const patientResponse = await axios.get('http://localhost:4000/api/superadmin/patients', {
+            const patientResponse = await axios.get(`${baseURL}/api/superadmin/patients`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPatients(patientResponse.data);
@@ -345,7 +345,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:4000/api/superadmin/doctors',
+            const response = await axios.post(`${baseURL}/api/superadmin/doctors`,
                 {
                     name: doctorName,
                     specialization: doctorSpecialization,
@@ -373,7 +373,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.put(`http://localhost:4000/api/superadmin/doctors/${editingDoctorId}`,
+            const response = await axios.put(`${baseURL}/api/superadmin/doctors/${editingDoctorId}`,
                 {
                     name: doctorName,
                     specialization: doctorSpecialization,
@@ -392,7 +392,7 @@ const AdminDashboard = () => {
     const deleteDoctor = async (id) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:4000/api/superadmin/doctors/${id}`, {
+            await axios.delete(`${baseURL}/api/superadmin/doctors/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setDoctors(doctors.filter(doc => doc._id !== id));
@@ -429,7 +429,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:4000/api/superadmin/patients',
+            const response = await axios.post(`${baseURL}/api/superadmin/patients`,
                 {
                     name: patientName,
                     email: patientEmail,
@@ -456,7 +456,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.put(`http://localhost:4000/api/superadmin/patients/${editingPatientId}`,
+            const response = await axios.put(`${baseURL}/api/superadmin/patients/${editingPatientId}`,
                 {
                     name: patientName,
                     email: patientEmail,
@@ -474,7 +474,7 @@ const AdminDashboard = () => {
     const deletePatient = async (id) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:4000/api/superadmin/patients/${id}`, {
+            await axios.delete(`${baseURL}/api/superadmin/patients/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPatients(patients.filter(patient => patient._id !== id));

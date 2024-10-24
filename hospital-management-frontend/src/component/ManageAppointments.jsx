@@ -21,8 +21,8 @@ function ManageAppointments() {
       const token = localStorage.getItem('token');
       try {
         const endpoint = userRole === 'super_admin'
-          ? 'http://localhost:4000/api/appointments/all'
-          : 'http://localhost:4000/api/appointments/doctor';
+          ? `${baseURL}/api/appointments/all`
+          : `${baseURL}/api/appointments/doctor`;
 
         const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` }
@@ -46,7 +46,7 @@ function ManageAppointments() {
   const handleStatusChange = async (id, status) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(`http://localhost:4000/api/appointments/${id}`, { status }, {
+      await axios.patch(`${baseURL}/api/appointments/${id}`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAppointments(appointments.map(app => 
@@ -62,7 +62,7 @@ function ManageAppointments() {
   const handleDeleteAppointment = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:4000/api/appointments/${id}`, {
+      await axios.delete(`${baseURL}/api/appointments/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAppointments(appointments.filter(app => app._id !== id));
