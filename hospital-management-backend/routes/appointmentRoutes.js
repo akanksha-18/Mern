@@ -100,18 +100,51 @@ router.patch('/:id', authenticate, async (req, res) => {
 });
 
 
+// router.get('/available', authenticate, async (req, res) => {
+//     const { doctorId, date } = req.query;
+
+//     try {
+//         const appointments = await Appointment.find({
+//             doctor: doctorId,
+//             date: {
+//                 $gte: new Date(date),
+//                 $lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1))
+//             }
+//         });
+
+//         const allSlots = [];
+//         for (let hour = 9; hour < 17; hour++) {
+//             for (let min = 0; min < 60; min += 15) {
+//                 allSlots.push(new Date(date).setHours(hour, min, 0, 0));
+//             }
+//         }
+
+//         const bookedSlots = appointments.map(app => new Date(app.date).getTime());
+//         const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
+
+//         res.json(availableSlots);
+//     } catch (err) {
+//         console.error('Error fetching available slots:', err);
+//         res.status(500).json({ error: 'Something went wrong' });
+//     }
+// });
+
+
 router.get('/available', authenticate, async (req, res) => {
     const { doctorId, date } = req.query;
 
     try {
+        // Find appointments that are not canceled
         const appointments = await Appointment.find({
             doctor: doctorId,
             date: {
                 $gte: new Date(date),
                 $lt: new Date(new Date(date).setDate(new Date(date).getDate() + 1))
-            }
+            },
+            status: { $ne: 'canceled' }  // Exclude canceled appointments
         });
 
+        // Generate all possible slots between 9 AM and 5 PM
         const allSlots = [];
         for (let hour = 9; hour < 17; hour++) {
             for (let min = 0; min < 60; min += 15) {
@@ -119,7 +152,10 @@ router.get('/available', authenticate, async (req, res) => {
             }
         }
 
+        // Get the booked slots
         const bookedSlots = appointments.map(app => new Date(app.date).getTime());
+
+        // Filter available slots
         const availableSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
 
         res.json(availableSlots);
@@ -128,8 +164,6 @@ router.get('/available', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
-
-
 
 
 
