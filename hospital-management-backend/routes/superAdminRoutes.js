@@ -125,6 +125,7 @@ superAdminRoutes.delete('/patients/:id', authenticate, superAdminAuth, async (re
     }
 });
 
+
 superAdminRoutes.put('/doctors/:id', authenticate, superAdminAuth, async (req, res) => {
     try {
         const { name, specialization, email, password } = req.body; 
@@ -156,6 +157,33 @@ superAdminRoutes.put('/doctors/:id', authenticate, superAdminAuth, async (req, r
     }
 });
 
+superAdminRoutes.put('/patients/:id', authenticate, superAdminAuth, async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const updatedData = {};
+
+        if (name) updatedData.name = name;
+        if (email) updatedData.email = email;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updatedData.password = hashedPassword;
+        }
+
+        const updatedPatient = await User.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+
+        if (!updatedPatient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+
+        res.json({ message: 'Patient updated successfully.', patient: updatedPatient });
+    } catch (error) {
+        console.error(error);
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Patient with this email already exists.' });
+        }
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 module.exports = {
     superAdminRoutes

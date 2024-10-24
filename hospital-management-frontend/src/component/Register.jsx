@@ -42,7 +42,7 @@ function Register() {
     }
 
     try {
-       await axios.post(`${baseURL}/api/users/register`, 
+       await axios.post('http://localhost:4000/api/users/register', 
         { 
         name, 
         email, 
@@ -97,7 +97,7 @@ function Register() {
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">Register</button>
         
         <p className="text-center text-gray-600">
-          Already have an account? <a href="/login" className="tSext-blue-500 hover:underline">Login here</a>
+          Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login here</a>
         </p>
       </form>
     </div>

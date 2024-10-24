@@ -9,7 +9,7 @@ function PatientAppointments() {
     const fetchAppointments = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get(`${baseURL}/api/appointments/patient`, {
+            const res = await axios.get('http://localhost:4000/api/appointments/patient', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log(res.data); 

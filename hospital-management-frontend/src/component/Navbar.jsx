@@ -129,7 +129,7 @@ const Navbar = ({ isLoggedIn, handleLogout }) => {
                   to="/register"
                   className="hover:text-yellow-300 hover:underline transition ease-in-out duration-300"
                 >
-                  Register
+                 Patient Register
                 </Link>
               </>
             )}
