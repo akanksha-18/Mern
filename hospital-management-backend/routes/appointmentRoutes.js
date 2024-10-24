@@ -188,5 +188,29 @@ router.delete('/:id', authenticate, async (req, res) => {
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
+router.patch('/cancel/:id', authenticate, async (req, res) => {
+    try {
+        const appointment = await Appointment.findById(req.params.id);
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        // Ensure the user is the one who booked the appointment
+        if (appointment.patient.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'You are not authorized to cancel this appointment' });
+        }
+
+        // Change the status to 'canceled'
+        appointment.status = 'canceled';
+
+        await appointment.save();
+
+        res.json({ message: 'Appointment canceled successfully' });
+    } catch (err) {
+        console.error('Error canceling appointment:', err);
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
 
 module.exports = router;
