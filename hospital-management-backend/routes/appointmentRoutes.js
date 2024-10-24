@@ -246,6 +246,42 @@ router.delete('/:id', authenticate, async (req, res) => {
 //     }
 // });
 
+// router.patch('/cancel/:id', authenticate, async (req, res) => {
+//     try {
+//         const appointment = await Appointment.findById(req.params.id);
+//         if (!appointment) {
+//             return res.status(404).json({ message: 'Appointment not found' });
+//         }
+
+//         // Ensure the user is the one who booked the appointment
+//         if (appointment.patient.toString() !== req.user.id) {
+//             return res.status(403).json({ message: 'You are not authorized to cancel this appointment' });
+//         }
+
+//         // Change the status to 'canceled'
+//         appointment.status = 'canceled';
+
+//         // Save the canceled appointment
+//         await appointment.save();
+
+//         // Make the slot available for other patients
+//         const doctorId = appointment.doctor;
+//         const appointmentDate = appointment.date;
+
+//         // You could create a new available slot, or add logic to handle slots as needed
+//         const availableSlot = await Appointment.create({
+//             doctor: doctorId,
+//             date: appointmentDate,
+//             status: 'available'
+//         });
+
+//         res.json({ message: 'Appointment canceled successfully, slot is now available' });
+//     } catch (err) {
+//         console.error('Error canceling appointment:', err);
+//         res.status(500).json({ error: 'Something went wrong' });
+//     }
+// });
+
 router.patch('/cancel/:id', authenticate, async (req, res) => {
     try {
         const appointment = await Appointment.findById(req.params.id);
@@ -264,23 +300,11 @@ router.patch('/cancel/:id', authenticate, async (req, res) => {
         // Save the canceled appointment
         await appointment.save();
 
-        // Make the slot available for other patients
-        const doctorId = appointment.doctor;
-        const appointmentDate = appointment.date;
-
-        // You could create a new available slot, or add logic to handle slots as needed
-        const availableSlot = await Appointment.create({
-            doctor: doctorId,
-            date: appointmentDate,
-            status: 'available'
-        });
-
-        res.json({ message: 'Appointment canceled successfully, slot is now available' });
+        res.json({ message: 'Appointment canceled successfully' });
     } catch (err) {
         console.error('Error canceling appointment:', err);
         res.status(500).json({ error: 'Something went wrong' });
     }
 });
-
 
 module.exports = router;
