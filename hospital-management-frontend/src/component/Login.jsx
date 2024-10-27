@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Login({ setIsLoggedIn }) {
@@ -74,8 +74,11 @@ function Login({ setIsLoggedIn }) {
         </button>
 
         <p className="mt-4 text-center text-gray-600">
-          Don&lsquo;t have an account? <a href="/register" className="text-blue-600 hover:underline">Register here</a>
-        </p>
+  Don&rsquo;t have an account?{' '}
+  <Link to="/register">
+    <span className="text-blue-600 hover:underline cursor-pointer">Register here</span>
+  </Link>
+</p>
       </form>
     </div>
   );

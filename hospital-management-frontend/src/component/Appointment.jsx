@@ -10,6 +10,7 @@ function Appointment() {
   const [symptoms, setSymptoms] = useState(''); 
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [availableSlots, setAvailableSlots] = useState([]);
   const baseURL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
@@ -68,6 +69,7 @@ function Appointment() {
         setMessage('');
     }
 };
+
 
   const filterTime = (time) => {
     const hour = time.getHours();

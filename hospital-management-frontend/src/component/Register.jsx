@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -97,7 +97,9 @@ function Register() {
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">Register</button>
         
         <p className="text-center text-gray-600">
-          Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login here</a>
+          Already have an account?  <Link to="/login">
+    <span className="text-blue-600 hover:underline cursor-pointer">Login here</span>
+  </Link>
         </p>
       </form>
     </div>
